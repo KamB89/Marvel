@@ -2,8 +2,9 @@
 
 
 class MarvelService {
-    _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df'
-    _apiBase = 'https://marvel-server-zeta.vercel.app'
+    _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df' //'b05298039dc55e4d0d6914ac3c1f7bc7'
+    _apiBase = 'https://marvel-server-zeta.vercel.app' // 'https://superheroapi.com/api/access-token
+
       
 
 
@@ -19,12 +20,23 @@ return await res.json()
 
     }
 
-    getAllCharacters =()=>{
-        return this.getResource(`${this._apiBase}/comics?apikey=${this._apiKey}`)
+    getAllCharacters = async()=>{
+        const res = await this.getResource(`${this._apiBase}/comics?apikey=${this._apiKey}`)
+        return res.data.results.map(this._transformCharacters)
     }
 
-    getCharacter =(id)=>{
-        return this.getResource(`${this._apiBase}/comics/${id}?apikey=${this._apiKey}`)
+    getCharacter = async(id)=>{
+        const res = await this.getResource(`${this._apiBase}/comics/${id}?apikey=${this._apiKey}`)
+        return this._transformCharacters(res.data.results[0])
+    }
+
+    _transformCharacters =(char)=>{
+       return ({
+               title: char.title,
+               description: char.description? `${char.description.slice(0, 210)}...` : `There is no description of ${char.title}`,
+                thumbnail: char.thumbnail.path + '.'+ char.thumbnail.extension,
+                wiki: null  
+            }) 
     }
 }
 
