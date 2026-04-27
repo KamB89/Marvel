@@ -10,10 +10,8 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 
 class RandomChar extends Component {
-    constructor(props) {
-        super(props)
-        this.updateChar()
-    }
+
+
     state = {
         char: {},
         loading: true,
@@ -23,6 +21,7 @@ class RandomChar extends Component {
 
     onCharLoaded = (char) => {
         this.setState({ char, loading : false })
+
     }
 
     onError = () => {
@@ -36,19 +35,31 @@ class RandomChar extends Component {
         const id = Math.floor(Math.random() * 20)+1
         this.marvelService
             .getCharacter(id)
+            // .then(res => console.log(res))
             .then(this.onCharLoaded)
             .catch(this.onError)
-        // .then(res => console.log(res))
 
 
     }
 
-    
+    // showAllChar = () =>{
+    //     this.marvelService.getAllCharacters()
+    //     .then(res=> console.log(res))
+    // }
+
+
+    componentDidMount(){
+        this.updateChar()
+    //    this.showAllChar() 
+
+    }
 
 
 
 
     render() {
+
+
         const { char, loading, error } = this.state
         const errorMessage = error? <ErrorMessage/> : null
         const spinner = loading? <Spinner/> : null

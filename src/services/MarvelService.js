@@ -22,8 +22,8 @@ return await res.json()
 
     getAllCharacters = async()=>{
         const res = await this.getResource(`${this._apiBase}/comics?apikey=${this._apiKey}`)
-        return res.data.results.map(this._transformCharacters)
-    }
+        console.log(res.data.results)
+        return res.data.results.map(this._transformCharacters)}
 
     getCharacter = async(id)=>{
         const res = await this.getResource(`${this._apiBase}/comics/${id}?apikey=${this._apiKey}`)
@@ -35,7 +35,8 @@ return await res.json()
                title: char.title,
                description: char.description? `${char.description.slice(0, 210)}...` : `There is no description of ${char.title}`,
                 thumbnail: char.thumbnail.path + '.'+ char.thumbnail.extension,
-                wiki: null  
+                wiki: null  ,
+                id : char.id
             }) 
     }
 }
