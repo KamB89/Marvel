@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import MarvelService from '../../services/MarvelService';
-import ErrorMessage from '../errorMessage/errorMesage';
+import ErrorMessage from '../errorMessage/errorMessage';
 
-import Spinner from '../spiner/spiner';
+import Spinner from '../spinner/spinner';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
@@ -20,7 +20,7 @@ class RandomChar extends Component {
     marvelService = new MarvelService()
 
     onCharLoaded = (char) => {
-        this.setState({ char, loading : false })
+        this.setState({ char, loading: false })
 
     }
 
@@ -32,7 +32,8 @@ class RandomChar extends Component {
     }
 
     updateChar = () => {
-        const id = Math.floor(Math.random() * 20)+1
+        const id = Math.floor(Math.random() * 20) + 1
+        this.onCharLoading()
         this.marvelService
             .getCharacter(id)
             // .then(res => console.log(res))
@@ -42,15 +43,21 @@ class RandomChar extends Component {
 
     }
 
+    onCharLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
     // showAllChar = () =>{
     //     this.marvelService.getAllCharacters()
     //     .then(res=> console.log(res))
     // }
 
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateChar()
-    //    this.showAllChar() 
+        //    this.showAllChar() 
 
     }
 
@@ -61,11 +68,11 @@ class RandomChar extends Component {
 
 
         const { char, loading, error } = this.state
-        const errorMessage = error? <ErrorMessage/> : null
-        const spinner = loading? <Spinner/> : null
-        const content = !(error || loading)?  <View char = {char}/>: null
+        const errorMessage = error ? <ErrorMessage /> : null
+        const spinner = loading ? <Spinner /> : null
+        const content = !(error || loading) ? <View char={char} /> : null
 
-       
+
         return (
             <div className="randomchar">
                 {errorMessage}
@@ -79,7 +86,8 @@ class RandomChar extends Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
-                    <button className="button button__main">
+                    <button className="button button__main"
+                        onClick={() => this.updateChar()}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />

@@ -1,8 +1,61 @@
+import { Component } from 'react';
+
 import './charInfo.scss';
 import thor from '../../resources/img/thor.jpeg';
+import MarvelService from '../../services/MarvelService';
 
-const CharInfo = () => {
-    return (
+class CharInfo extends Component {
+state = {
+    loading: false,
+    error: false,
+    char: {}
+}
+
+
+marvelService = new MarvelService()
+
+
+componentDidMount (){
+this.updateChar()
+
+}
+
+
+updateChar = () =>{
+    const{charId} = this.props;
+    if(!charId){
+        return;
+    }
+
+  this.onCharLoading();
+
+    this.marvelService.getCharacter(charId)
+    .then(this.onCharLoaded) 
+    .catch(this.onError)
+}
+
+ onError = () => {
+        this.setState({
+            loading: false,
+            error: true
+        })
+    }
+
+    onCharLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    onCharLoaded = (char) => {
+        this.setState({ char, loading: false })
+
+    }
+
+
+
+   render(){
+     return (
         <div className="char__info">
             <div className="char__basics">
                 <img src={thor} alt="abyss"/>
@@ -56,6 +109,7 @@ const CharInfo = () => {
             </ul>
         </div>
     )
+   }
 }
 
 export default CharInfo;
