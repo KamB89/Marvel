@@ -1,8 +1,9 @@
 class MarvelService {
-    _apiBase = '/api/marvel';
+    _apiBase = 'https://marvel-server-zeta.vercel.app/characters';
+    _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df';
 
     getResource = async (url) => {
-        const res = await fetch(url);
+        const res = await fetch(`${url}?apikey=${this._apiKey}`);
 
         if (!res.ok) {
             throw new Error(`Could not fetch ${url}, status ${res.status}`);
@@ -13,19 +14,19 @@ class MarvelService {
 
     getAllCharacters = async () => {
         const res = await this.getResource(this._apiBase);
-        return res.data.results.map(this._transformCharacters);
+        return res.results.map(this._transformCharacters);
     };
 
     getCharacter = async (id) => {
-        const res = await this.getResource(`${this._apiBase}/${id}`);
-        return this._transformCharacters(res.data.results[0]);
+        const res = await this.getResource(`${this._apiBase}?id=${id}`);
+        return this._transformCharacters(res.results[0]);
     };
 
     _transformCharacters = (char) => ({
         id: char.id,
-        title: char.title,
+        name: char.name,
         description: char.description || 'No description',
-        thumbnail: `${char.thumbnail.path}.${char.thumbnail.extension}`
+        thumbnail: char.thumbnail
     });
 }
 
