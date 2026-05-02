@@ -36,7 +36,7 @@ class RandomChar extends Component {
         this.onCharLoading()
         this.marvelService
             .getCharacter(id)
-            // .then(res => console.log(res))
+            .then(res => console.log(res))
             .then(this.onCharLoaded)
             .catch(this.onError)
 
