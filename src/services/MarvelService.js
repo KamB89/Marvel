@@ -1,46 +1,33 @@
-
-
-
 class MarvelService {
-    _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df' //'b05298039dc55e4d0d6914ac3c1f7bc7'
-    _apiBase = 'https://marvel-server-zeta.vercel.app' // 'https://superheroapi.com/api/access-token
+    _apiBase = 'https://marvel-server-zeta.vercel.app/characters';
+    _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df';
 
-      
+    getResource = async (url) => {
+        const res = await fetch(`${url}?apikey=${this._apiKey}`);
 
-
-    getResource = async (url)=>{
-        let res = await fetch(url);
-     
-
-
-        if(!res.ok){
-           throw new Error(`Could not fetched ${url}, status ${res.status} `) 
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status ${res.status}`);
         }
-return await res.json()
 
-    }
+        return await res.json();
+    };
 
-    getAllCharacters = async()=>{
-        const res = await this.getResource(`${this._apiBase}/comics?apikey=${this._apiKey}`)
-        console.log(res.data.results)
-        return res.data.results.map(this._transformCharacters)}
+    getAllCharacters = async () => {
+        const res = await this.getResource(this._apiBase);
+        return res.results.map(this._transformCharacters);
+    };
 
-    getCharacter = async(id)=>{
-        const res = await this.getResource(`${this._apiBase}/comics/${id}?apikey=${this._apiKey}`)
-        return this._transformCharacters(res.data.results[0])
-    }
+    getCharacter = async (id) => {
+        const res = await this.getResource(`${this._apiBase}?id=${id}`);
+        return this._transformCharacters(res.results[0]);
+    };
 
-    _transformCharacters =(char)=>{
-       return ({
-               title: char.title,
-               description: char.description? `${char.description.slice(0, 210)}...` : `There is no description of ${char.title}`,
-                thumbnail: char.thumbnail.path + '.'+ char.thumbnail.extension,
-                wiki: null  ,
-                id : char.id
-            }) 
-    }
+    _transformCharacters = (char) => ({
+        id: char.id,
+        name: char.name,
+        description: char.description || 'No description',
+        thumbnail: char.thumbnail
+    });
 }
 
-export default MarvelService
-
-
+export default MarvelService;
